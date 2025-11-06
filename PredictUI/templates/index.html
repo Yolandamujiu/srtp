@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>运动想象EEG模型</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>运动想象EEG模型</h1>
+            <p>上传EEG数据文件进行模型训练和预测</p>
+        </header>
+
+        <main>
+            <section class="train-section">
+                <h2>模型训练</h2>
+                <div class="input-group">
+                    <label for="train-dir">训练数据目录:</label>
+                    <input type="text" id="train-dir" placeholder="输入训练数据文件夹路径">
+                </div>
+                <button id="train-btn" class="btn">开始训练</button>
+                
+                <div class="status-box" id="train-status">
+                    <h3>训练状态</h3>
+                    <div class="progress-bar">
+                        <div id="progress" style="width: 0%;"></div>
+                    </div>
+                    <pre id="train-log" class="log-content"></pre>
+                </div>
+            </section>
+
+            <section class="predict-section">
+                <h2>模型预测</h2>
+                <div class="upload-area">
+                    <label for="predict-files">请选择 EEG 文件 (.set + .fdt)：</label><br>
+                    <!-- single input multiple 模式，用户一次选两个文件 -->
+                    <input type="file" id="predict-files" name="files" multiple accept=".set,.fdt">
+                    <p id="file-info">请同时选择一个 .set 文件和对应的 .fdt 文件</p>
+                </div>
+                <button id="predict-btn" class="btn" disabled>开始预测</button>
+                
+                <div class="result-box" id="prediction-result">
+                    <h3>预测结果</h3>
+                    <div class="result-content">
+                        <!-- 预测结果将在这里显示 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>运动想象EEG模型网页应用 &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
