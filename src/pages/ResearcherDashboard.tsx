@@ -1,40 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import Header from '@/components/MotionImagery/Header';
+import { AuthContext } from '@/contexts/authContext';
 import SubjectInfo from '@/components/MotionImagery/SubjectInfo';
 import ExperimentControls from '@/components/MotionImagery/ExperimentControls';
 import DataManagement from '@/components/MotionImagery/DataManagement';
-import Brain3DVisualization from '@/components/MotionImagery/Brain3DVisualization';
-import EEGSignalChart from '@/components/MotionImagery/EEGSignalChart';
 import ClassificationResults from '@/components/MotionImagery/ClassificationResults';
-import FeatureVisualization from '@/components/MotionImagery/FeatureVisualization';
 import TrainingMetrics from '@/components/MotionImagery/TrainingMetrics';
 import StatusBar from '@/components/MotionImagery/StatusBar';
-import ParadigmSelector from '@/components/MotionImagery/ParadigmSelector';
-
 import { motionImageryData } from '@/mocks/motionImageryData';
 
-// 此页面保留为历史版本，新的实现已分为主试和被试两个界面
-const MotionImageryTraining: React.FC = () => {
-  const [activeParadigm, setActiveParadigm] = useState('motion-imagery');
+export default function ResearcherDashboard() {
+  const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
   const [systemStatus, setSystemStatus] = useState('ready');
   const [feedbackType, setFeedbackType] = useState<'with-feedback' | 'without-feedback'>('with-feedback');
-  
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col overflow-hidden">
       {/* 顶部标题栏 */}
       <header className="bg-gray-800 border-b border-gray-700 py-3 px-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <ParadigmSelector 
-            activeParadigm={activeParadigm} 
-            onParadigmChange={setActiveParadigm} 
-          />
-          <h1 className="text-xl font-bold text-white">基于在线脑电信号解析与实时反馈协同的脑机接口训练优化平台</h1>
+          <div className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+            主试界面
+          </div>
+          <h1 className="text-xl font-bold text-white">脑机接口训练平台 - 主试控制台</h1>
         </div>
-        <div className="text-right text-sm text-gray-300 max-w-xs">
-          {motionImageryData.researchers.map((researcher, index) => (
-            <div key={index}>{researcher.name}: {researcher.email}</div>
-          ))}
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-300">
+            研究人员: {motionImageryData.researchers[0]?.name}
+          </div>
+          <button 
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded transition-colors text-sm"
+          >
+            退出
+          </button>
         </div>
       </header>
       
@@ -42,7 +48,7 @@ const MotionImageryTraining: React.FC = () => {
       <main className="flex-grow flex overflow-hidden">
         {/* 左侧面板 (导航与控制区) */}
         <PanelGroup direction="horizontal" className="flex-grow h-full">
-          <Panel defaultSize={25} className="bg-gray-800 border-r border-gray-700 p-4 overflow-y-auto">
+          <Panel defaultSize={30} className="bg-gray-800 border-r border-gray-700 p-4 overflow-y-auto">
             <div className="space-y-6">
               <SubjectInfo subject={motionImageryData.subject} />
               
@@ -65,39 +71,11 @@ const MotionImageryTraining: React.FC = () => {
           
           <PanelResizeHandle className="w-1 bg-gray-700 hover:bg-gray-600" />
           
-          {/* 中央主视觉区 (核心反馈区) */}
-          <Panel defaultSize={50} className="bg-gray-900 p-4 overflow-y-auto">
-            <div className="space-y-6">
-              <div className="bg-gray-800/50 rounded-lg p-4">
-                <h2 className="text-lg font-semibold mb-3 text-white">3D大脑源成像可视化</h2>
-                <Brain3DVisualization 
-                  brainActivity={motionImageryData.brainActivity}
-                  status={systemStatus}
-                />
-              </div>
-              
-              <div className="bg-gray-800/50 rounded-lg p-4">
-                <h2 className="text-lg font-semibold mb-3 text-white">实时EEG信号 (C3, C4通道)</h2>
-                <EEGSignalChart 
-                  eegData={motionImageryData.eegData}
-                  status={systemStatus}
-                />
-              </div>
-            </div>
-          </Panel>
-          
-          <PanelResizeHandle className="w-1 bg-gray-700 hover:bg-gray-600" />
-          
           {/* 右侧面板 (数据分析与参数区) */}
-          <Panel defaultSize={25} className="bg-gray-800 border-l border-gray-700 p-4 overflow-y-auto">
+          <Panel defaultSize={70} className="bg-gray-800 border-l border-gray-700 p-4 overflow-y-auto">
             <div className="space-y-6">
               <ClassificationResults 
                 results={motionImageryData.classificationResults}
-                status={systemStatus}
-              />
-              
-              <FeatureVisualization 
-                featureData={motionImageryData.featureData}
                 status={systemStatus}
               />
               
@@ -123,6 +101,4 @@ const MotionImageryTraining: React.FC = () => {
       />
     </div>
   );
-};
-
-export default MotionImageryTraining;
+}

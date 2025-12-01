@@ -2,16 +2,15 @@ export const motionImageryData = {
   // 系统信息
   systemName: "基于在线脑电信号解析与实时反馈协同的脑机接口训练优化平台",
   researchers: [
-    { name: "孙煜", email: "yusun@example.com" },
-    { name: "冯钊", email: "zhaofeng@example.com" }
+    { name: "史晓", email: "3230100394@zju.edu.cn" }
   ],
   
   // 被试信息
   subject: {
     id: "BCI-2025-001",
     name: "史晓",
-    age: 35,
-    gender: "男",
+    age: 20,
+    gender: "女",
     handedness: "右利手",
     experimentDate: "2025-09-06",
     sessionNumber: 8,

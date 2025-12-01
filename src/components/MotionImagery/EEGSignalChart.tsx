@@ -30,15 +30,7 @@ const EEGSignalChart: React.FC<EEGSignalChartProps> = ({ eegData, status }) => {
   useEffect(() => {
     let interval: number;
     
-    // 检查是否为离线模式（通过数据长度判断）
-    const isOfflineMode = eegData.samples.length > 1000;
-    
-    if (isOfflineMode) {
-      // 离线模式：直接显示导入的数据
-      setDisplayData(eegData.samples);
-      setIsReceiving(false);
-    } else if (status.includes('training') && !status.includes('paused')) {
-      // 实时模式：模拟数据流
+    if (status.includes('training') && !status.includes('paused')) {
       setIsReceiving(true);
       interval = setInterval(() => {
         setDisplayData(prevData => {
@@ -74,7 +66,7 @@ const EEGSignalChart: React.FC<EEGSignalChartProps> = ({ eegData, status }) => {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [status, eegData.channels, eegData.samples.length]);
+  }, [status, eegData.channels]);
   
   return (
     <div className="w-full h-full">
@@ -84,15 +76,11 @@ const EEGSignalChart: React.FC<EEGSignalChartProps> = ({ eegData, status }) => {
         </h3>
         <div className="flex items-center gap-2">
           <span className={`text-xs px-2 py-1 rounded-full ${
-            isReceiving ? 'bg-green-900/50 text-green-400' : 
-            eegData.samples.length > 1000 ? 'bg-blue-900/50 text-blue-400' : 'bg-gray-700 text-gray-400'
+            isReceiving ? 'bg-green-900/50 text-green-400' : 'bg-gray-700 text-gray-400'
           }`}>
-            {isReceiving ? '实时接收中' : 
-             eegData.samples.length > 1000 ? '离线数据' : '已暂停'}
+            {isReceiving ? '实时接收中' : '已暂停'}
           </span>
-          <span className="text-xs text-gray-400">
-            采样率: {eegData.samples.length > 1000 ? '1000 Hz' : '1000 Hz'}
-          </span>
+          <span className="text-xs text-gray-400">采样率: 1000 Hz</span>
         </div>
       </div>
       
@@ -163,14 +151,8 @@ const EEGSignalChart: React.FC<EEGSignalChartProps> = ({ eegData, status }) => {
           ))}
         </div>
         <div className="flex items-center gap-1">
-          <div className={`w-2 h-2 rounded-full ${
-            isReceiving ? 'bg-green-500 animate-pulse' : 
-            eegData.samples.length > 1000 ? 'bg-blue-500' : 'bg-gray-600'
-          }`}></div>
-          <span>
-            {isReceiving ? '实时更新中' : 
-             eegData.samples.length > 1000 ? '离线数据' : '已暂停'}
-          </span>
+          <div className={`w-2 h-2 rounded-full ${isReceiving ? 'bg-green-500 animate-pulse' : 'bg-gray-600'}`}></div>
+          <span>{isReceiving ? '实时更新中' : '已暂停'}</span>
         </div>
       </div>
     </div>

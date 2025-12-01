@@ -1,7 +1,19 @@
 import { createContext } from "react";
 
-export const AuthContext = createContext({
+// 定义AuthContext的类型接口
+interface AuthContextType {
+  isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
+  logout: () => void;
+  userRole: string | null;
+  setUserRole: (role: string | null) => void;
+}
+
+// 使用类型接口创建Context
+export const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
-  setIsAuthenticated: (value: boolean) => {},
+  setIsAuthenticated: () => {},
   logout: () => {},
+  userRole: null,
+  setUserRole: () => {},
 });
